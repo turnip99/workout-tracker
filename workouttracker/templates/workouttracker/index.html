@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block main %}
+    Hello world
+    {% if request.user.is_superuser %}
+        <a href="{% url 'admin:index' %}" class="btn btn-danger w-100 mb-1">Django admin</a>
+    {% endif %}
+{% endblock %}
