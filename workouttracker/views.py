@@ -86,7 +86,7 @@ class WorkoutEndView(generic.UpdateView):
     template_name = "workouttracker/workout/workout_exercise_form.html"
     model = Workout
     form_class = WorkoutEndForm
-    success_url = reverse_lazy("")
+    success_url = reverse_lazy("index")
 
     def form_valid(self, form):
         obj = form.save(commit=False)
