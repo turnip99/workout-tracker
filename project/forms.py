@@ -5,7 +5,7 @@ from crispy_forms.layout import Submit
 
 class FormWithHelperMixin:
     submit_text = "Save"
-    submit_css_class = "btn-secondary"
+    submit_css_class = "btn-light"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

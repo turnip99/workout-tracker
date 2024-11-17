@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+    <div class="row mb-3">
+        {% for exercise in object_list %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                <a class="btn btn-light w-100 mb-3" href="{% url 'exercise_update' pk=exercise.pk %}">
+                    {{ exercise.name }}
+                    <img src="{{ exercise.get_image_url }}" class="w-100 mt-1" style="object-fit: scale-down;"></img>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <a class="btn btn-light" href="{% url 'exercise_create' %}">Add a new exercise</a>
+{% endblock %}
