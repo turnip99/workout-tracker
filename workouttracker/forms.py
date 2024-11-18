@@ -28,7 +28,7 @@ class ExerciseForm(FormWithHelperMixin, forms.ModelForm):
         self.helper = FormHelper(self)
         self.helper.layout.append(Submit('submit', self.submit_text, css_class=self.submit_css_class))
         if self.instance.pk:
-            self.helper.layout.append(HTML(f"<a class='btn btn-danger' href='{reverse_lazy('exercise_delete', kwargs={'pk': self.instance.pk})}'>Delete</a>"))
+            self.helper.layout.append(HTML(f"<a class='btn btn-danger{' disabled' if self.instance.workoutexercise_set.exists() else ''}' href='{reverse_lazy('exercise_delete', kwargs={'pk': self.instance.pk})}'>Delete</a>"))
 
 
 class WorkoutExerciseForm(FormWithHelperMixin, forms.ModelForm):
