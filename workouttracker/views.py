@@ -5,7 +5,7 @@ from django.views import generic
 
 from .forms import ExerciseForm, WorkoutEndForm, WorkoutExerciseForm
 from .models import Exercise, Workout, WorkoutExercise
-from .utils import get_enabled_metric_fields_by_exercise
+from .utils import get_default_metric_values_by_exercise, get_enabled_metric_fields_by_exercise
 
 class IndexView(generic.TemplateView):
     template_name = "workouttracker/index.html"
@@ -41,6 +41,7 @@ class WorkoutAddExerciseView(generic.CreateView):
         super().__init__(**kwargs)
         self.workout_id = None
         self.enabled_metric_fields_by_exercise = get_enabled_metric_fields_by_exercise()
+        self.default_metric_values_by_exercise = get_default_metric_values_by_exercise(self.enabled_metric_fields_by_exercise)
 
     def dispatch(self, request, *args, **kwargs):
         self.workout_id = kwargs["workout_id"]
@@ -56,6 +57,7 @@ class WorkoutAddExerciseView(generic.CreateView):
         context["workout"] = Workout.objects.get(id=self.workout_id)
         context["all_metric_fields"] = Exercise.get_all_metric_fields()
         context["enabled_metric_fields_by_exercise"] = self.enabled_metric_fields_by_exercise
+        context["default_metric_values_by_exercise"] = self.default_metric_values_by_exercise
         return context
     
     def form_valid(self, form):
@@ -93,6 +95,12 @@ class WorkoutEndView(generic.UpdateView):
         obj.end_dt = timezone.now()
         obj.save()
         return super().form_valid(form)
+    
+
+class WorkoutPreviousListView(generic.ListView):
+    template_name = "workouttracker/workout/workout_previous_list.html"
+    model = Workout
+    queryset = Workout.objects.filter(end_dt__isnull=False).order_by("-start_dt")
     
 
 class ExerciseListView(generic.ListView):

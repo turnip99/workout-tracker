@@ -14,18 +14,27 @@
 {% block scripts %}
     {% if not self.object %}
         {{ enabled_metric_fields_by_exercise|json_script:"enabled-metric-fields-by-exercise" }}
+        {{ default_metric_values_by_exercise|json_script:"default-metric-values-by-exercise" }}
         <script>
             const enabledMetricFieldsByExercise = JSON.parse(document.getElementById('enabled-metric-fields-by-exercise').textContent);
+            const defaultMetricValuesByExercise = JSON.parse(document.getElementById('default-metric-values-by-exercise').textContent);
             $("#id_exercise").change(function() {
                 let enabledMetricFields = []
+                let defaultMetricValues = {}
                 const exerciseID = $(this).val()
                 if (exerciseID) {
                     enabledMetricFields = enabledMetricFieldsByExercise[exerciseID]
+                    defaultMetricValues = defaultMetricValuesByExercise[exerciseID]
                 }
+                console.log(defaultMetricValues)
                 {% for metric_field in all_metric_fields %}
+                    $("#id_{{ metric_field }}").val("")
                     if (enabledMetricFields.includes("{{ metric_field }}")) {
                         $("#div_id_{{ metric_field }}").removeClass("d-none")
                         $("#id_{{ metric_field }}").prop("required", true)
+                        if (Object.keys(defaultMetricValues).includes("{{ metric_field }}")) {
+                            $("#id_{{ metric_field }}").val(defaultMetricValues["{{ metric_field }}"])
+                        }
                     }
                     else {
                         $("#div_id_{{ metric_field }}").addClass("d-none")

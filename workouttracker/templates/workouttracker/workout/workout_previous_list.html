@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block main %}
+    {% for workout in object_list %}
+        <a class="btn btn-light w-100 mb-1" href="{% url 'workout' pk=workout.pk %}">{{ workout }}</a>
+    {% endfor %}
+{% endblock %}

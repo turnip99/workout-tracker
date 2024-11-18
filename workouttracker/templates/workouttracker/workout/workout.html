@@ -1,24 +1,29 @@
 {% extends "base.html" %}
+{% load workout_extras %}
 
 {% block main %}
-    <h5>Workout starting at {{ object.start_dt|date:'d-m-Y H:i' }}</h5>
-    <a class="btn btn-secondary w-100" href="{% url 'workout_add_exercise' workout_id=object.id %}">Add exercise</a>
+    <h5>Workout {% if object.is_complete %}from {{ object.start_dt|date:'d-m-Y H:i' }} to {{ object.end_dt|date:'d-m-Y H:i' }}{% else %}starting at {{ object.start_dt|date:'d-m-Y H:i' }}{% endif %}</h5>
+    {% if not object.is_complete %}
+        <a class="btn btn-secondary w-100 mb-2" href="{% url 'workout_add_exercise' workout_id=object.id %}">Add exercise</a>
+    {% endif %}
     <div class="row">
         {% for workout_exercise in object.workoutexercise_set.all %}
             <div class="col-12">
-                <a class="row mx-0 my-2 bg-light" href="{% url 'workout_update_exercise' pk=workout_exercise.pk %}">
-                    <div class="col-auto">
-                        <img src="{{ workout_exercise.exercise.get_image_url }}" style="object-fit: scale-down;"></img>
+                <a class="row mx-0 mb-2 bg-light text-decoration-none{% if object.is_complete %} pe-none{% endif %}" href="{% if not object.is_complete %}{% url 'workout_update_exercise' pk=workout_exercise.pk %}{% endif %}">
+                    <div class="col-3">
+                        <img src="{{ workout_exercise.exercise.get_image_url }}" class="w-100" style="aspect-ratio: 1/1; object-fit:contain"></img>
                     </div>
-                    <div class="col py-2">
+                    <div class="col-9 py-2">
                         <h6 class="text-dark text-decoration-none fw-bold">{{ workout_exercise.exercise.name }}</h6>
                         {% for metric_field, metric_value in workout_exercise.get_metric_values.items %}
-                            <p class="text-dark text-decoration-none mb-1">{{ metric_field }}: {{ metric_value }}</p>
+                            <p class="text-dark text-decoration-none mb-1">{{ metric_field|capitalise_and_underscore_to_space }}: {{ metric_value }}</p>
                         {% endfor %}
                     </div>
                 </a>
             </div>
         {% endfor %}
     </div>
-    <a class="btn btn-success w-100" href="{% url 'workout_end' pk=object.id %}">End workout</a>
+    {% if not object.is_complete %}
+        <a class="btn btn-success w-100" href="{% url 'workout_end' pk=object.id %}">End workout</a>
+    {% endif %}
 {% endblock %}

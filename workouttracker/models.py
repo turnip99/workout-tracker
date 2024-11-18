@@ -61,7 +61,10 @@ class Workout(models.Model):
         ordering = ["start_dt"]
 
     def __str__(self):
-        return f"Workout on {self.start_dt.date().strftime('%d-%m-%Y')}"
+        return f"Workout on {self.start_dt.date().strftime('%d-%m-%Y')} at {self.start_dt.strftime("%H:%M")}"
+    
+    def is_complete(self):
+        return bool(self.end_dt)
     
 
 class WorkoutExercise(models.Model):
@@ -75,7 +78,7 @@ class WorkoutExercise(models.Model):
     sets = models.IntegerField(default=1)
 
     class Meta:
-        ordering = ["workout__start_dt", "exercise__category", "exercise__name"]
+        ordering = ["id"]
 
     def __str__(self):
         return f"{self.exercise.name} on {self.workout.start_dt.date().strftime('%d-%m-%Y')}"
