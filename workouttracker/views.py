@@ -82,6 +82,14 @@ class WorkoutUpdateExerciseView(generic.UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("workout", kwargs={"pk": self.object.workout.id})
+
+
+class WorkoutIncrementExerciseSetsView(generic.View):
+    def post(self, request, *args, **kwargs):
+        workout_exercise = WorkoutExercise.objects.get(id=kwargs["pk"])
+        workout_exercise.sets += 1
+        workout_exercise.save()
+        return HttpResponse(workout_exercise.sets)
     
 
 class WorkoutEndView(generic.UpdateView):

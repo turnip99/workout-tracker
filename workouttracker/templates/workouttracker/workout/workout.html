@@ -9,21 +9,44 @@
     <div class="row">
         {% for workout_exercise in object.workoutexercise_set.all %}
             <div class="col-12">
-                <a class="row mx-0 mb-2 bg-light text-decoration-none{% if object.is_complete %} pe-none{% endif %}" href="{% if not object.is_complete %}{% url 'workout_update_exercise' pk=workout_exercise.pk %}{% endif %}">
+                <div {% if not object.is_complete %}role="button"{% endif %} class="row mx-0 mb-2 bg-light text-decoration-none{% if not object.is_complete %} workout-exercise-row{% endif %}" data-update-url="{% url 'workout_update_exercise' pk=workout_exercise.pk %}" data-workout-exercise-id="{{ object.id }}">
                     <div class="col-3">
                         <img src="{{ workout_exercise.exercise.get_image_url }}" class="w-100" style="aspect-ratio: 1/1; object-fit:contain"></img>
                     </div>
-                    <div class="col-9 py-2">
-                        <h6 class="text-dark text-decoration-none fw-bold">{{ workout_exercise.exercise.name }}</h6>
+                    <div class="col py-2">
+                        <h5 class="text-dark text-decoration-none fw-bold">{{ workout_exercise.exercise.name }}</h5>
                         {% for metric_field, metric_value in workout_exercise.get_metric_values.items %}
                             <p class="text-dark text-decoration-none mb-1">{{ metric_field|capitalise_and_underscore_to_space }}: {{ metric_value }}</p>
                         {% endfor %}
                     </div>
-                </a>
+                    <div class="col-auto">
+                        <p class="text-dark text-decoration-none fw-bold text-end"><span class="text-nowrap">Sets: <span class="set-counter">{{ workout_exercise.sets }}</span></span>{% if not object.is_complete %} <button class="set-increment-button btn btn-primary py-0 px-2" data-set-increment-url="{% url 'workout_increment_exercise_sets' pk=workout_exercise.pk %}">+</button>{% endif %}</p>
+                    </div>
+                </div>
             </div>
         {% endfor %}
     </div>
     {% if not object.is_complete %}
         <a class="btn btn-success w-100" href="{% url 'workout_end' pk=object.id %}">End workout</a>
     {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(".set-increment-button").click(function(e) {
+            e.stopPropagation();
+            const setIncrementButton = $(this)
+            const workoutExerciseRow = setIncrementButton.closest(".workout-exercise-row")
+            const setCounter = workoutExerciseRow.find(".set-counter")
+            setIncrementButton.prop("disabled", true)
+            $.post(setIncrementButton.data("set-increment-url"), {csrfmiddlewaretoken: "{{ csrf_token }}"}, function(newSetCount) {
+                setCounter.text(newSetCount)
+                setIncrementButton.prop("disabled", false)
+            });
+        });
+
+        $(".workout-exercise-row").click(function() {
+            window.location = $(this).data("update-url")
+        });
+    </script>
 {% endblock %}

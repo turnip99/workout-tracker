@@ -72,7 +72,7 @@ class WorkoutExercise(models.Model):
     workout = models.ForeignKey(Workout, on_delete=models.deletion.CASCADE)
     weight = models.FloatField(null=True, blank=True, verbose_name="Weight (kgs)")
     reps = models.IntegerField(null=True, blank=True, verbose_name="Repetitions")
-    duration = models.DurationField(null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True, help_text="05:00 is five minutes. 01:00:00 is one hour.")
     distance = models.IntegerField(null=True, blank=True, verbose_name="Distance (metres)")
     difficulty_level = models.IntegerField(null=True, blank=True)
     sets = models.IntegerField(default=1)
