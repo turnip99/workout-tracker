@@ -15,8 +15,8 @@
                     </div>
                     <div class="col py-2">
                         <h5 class="text-dark text-decoration-none fw-bold">{{ workout_exercise.exercise.name }}</h5>
-                        {% for metric_field, metric_value in workout_exercise.get_metric_values.items %}
-                            <p class="text-dark text-decoration-none mb-1">{{ metric_field|capitalise_and_underscore_to_space }}: {{ metric_value }}</p>
+                        {% for metric_field_name, metric_value in workout_exercise.get_metric_values.items %}
+                            <p class="text-dark text-decoration-none mb-1">{{ metric_field_name|capitalise_and_underscore_to_space }}: {{ metric_value }}</p>
                         {% endfor %}
                     </div>
                     <div class="col-auto">

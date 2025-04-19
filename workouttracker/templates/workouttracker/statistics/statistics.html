@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load workout_extras %}
+
+{% block main %}
+    <div class="form-group">
+        <label>Exercise</label>
+        <select class="form-control" id="exercise_select">
+            <option value="weight">Weight</option>
+            <hr/>
+            {% for exercise in exercises %}
+                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("#exercise_select").change(function() {
+            exerciseSelect = $(this)
+            const selectedExercise = exerciseSelect.val()
+            if (selectedExercise == "weight") {
+                // TODO load weight in immediately
+            }
+            else {
+                exerciseSelect.prop("disabled", true)
+                $.get("{% url 'statistics_exercise_data_points' pk=0 %}".replace("0", selectedExercise), function(dataPoints) {
+                    console.log(dataPoints)
+                    exerciseSelect.prop("disabled", false)
+                });
+            }
+        }).change()
+    </script>
+{% endblock %}

@@ -16,4 +16,6 @@ urlpatterns = [
     path('exercise_create/', login_required(views.ExerciseCreateView.as_view()), name='exercise_create'),
     path('exercise_update/<int:pk>/', login_required(views.ExerciseUpdateView.as_view()), name='exercise_update'),
     path('exercise_delete/<int:pk>/', login_required(views.ExerciseDeleteView.as_view()), name='exercise_delete'),
+    path('statistics/', login_required(views.StatisticsView.as_view()), name='statistics'),
+    path('statistics/exercise_data_points/<int:pk>/', login_required(views.StatisticsExerciseDataPointsView.as_view()), name='statistics_exercise_data_points'),
 ]

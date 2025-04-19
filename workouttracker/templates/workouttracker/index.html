@@ -8,6 +8,7 @@
     {% endif %}
     <a href="{% url 'workout_previous_list' %}" class="btn btn-secondary w-100 mb-1">Previous workouts</a>
     <a href="{% url 'exercise_list' %}" class="btn btn-secondary w-100 mb-1">Manage exercises</a>
+    <a href="{% url 'statistics' %}" class="btn btn-secondary w-100 mb-1">Statistics</a>
     {% if request.user.is_superuser %}
         <a href="{% url 'admin:index' %}" class="btn btn-danger w-100 mb-1">Django admin</a>
     {% endif %}

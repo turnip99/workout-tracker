@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse as HttpResponse
+from django.http.response import HttpResponse as HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
@@ -134,3 +134,18 @@ class ExerciseDeleteView(generic.DeleteView):
     template_name = "workouttracker/edit/exercise_delete.html"
     model = Exercise
     success_url = reverse_lazy("exercise_list")
+
+
+class StatisticsView(generic.TemplateView):
+    template_name = "workouttracker/statistics/statistics.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["exercises"] = Exercise.objects.all()
+        return context
+
+
+class StatisticsExerciseDataPointsView(generic.View):
+    def get(self, request, *args, **kwargs):
+        data_points = {}
+        return JsonResponse(data_points)
