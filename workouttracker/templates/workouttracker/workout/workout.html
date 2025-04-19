@@ -10,8 +10,8 @@
         {% for workout_exercise in object.workoutexercise_set.all %}
             <div class="col-12">
                 <div {% if not object.is_complete %}role="button"{% endif %} class="row mx-0 mb-2 bg-light text-decoration-none{% if not object.is_complete %} workout-exercise-row{% endif %}" data-update-url="{% url 'workout_update_exercise' pk=workout_exercise.pk %}" data-workout-exercise-id="{{ object.id }}">
-                    <div class="col-3">
-                        <img src="{{ workout_exercise.exercise.get_image_url }}" class="w-100" style="aspect-ratio: 1/1; object-fit:contain"></img>
+                    <div class="col-3 d-flex justify=content-center" style="display: flex; justify-content: center">
+                        <img src="{{ workout_exercise.exercise.get_image_url }}" class="w-100" style="aspect-ratio: 1/1; object-fit: contain"></img>
                     </div>
                     <div class="col py-2">
                         <h5 class="text-dark text-decoration-none fw-bold">{{ workout_exercise.exercise.name }}</h5>
@@ -20,7 +20,8 @@
                         {% endfor %}
                     </div>
                     <div class="col-auto">
-                        <p class="text-dark text-decoration-none fw-bold text-end"><span class="text-nowrap">Sets: <span class="set-counter">{{ workout_exercise.sets }}</span></span>{% if not object.is_complete %} <button class="set-increment-button btn btn-primary py-0 px-2" data-set-increment-url="{% url 'workout_increment_exercise_sets' pk=workout_exercise.pk %}">+</button>{% endif %}</p>
+                        <h5 class="text-dark text-decoration-none fw-bold text-end mb-1"><span class="text-nowrap">Sets: <span class="set-counter">{{ workout_exercise.sets }}</span></span></h5>
+                        {% if not object.is_complete %}<button class="set-increment-button btn btn-primary py-1 w-100" data-set-increment-url="{% url 'workout_increment_exercise_sets' pk=workout_exercise.pk %}">+</button>{% endif %}
                     </div>
                 </div>
             </div>
