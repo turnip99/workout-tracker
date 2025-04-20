@@ -55,7 +55,7 @@ class Exercise(models.Model):
 class Workout(models.Model):
     start_dt = models.DateTimeField()
     end_dt = models.DateTimeField(null=True, blank=True)
-    weight = models.FloatField(null=True, blank=True, verbose_name="Weight kg)")
+    weight = models.FloatField(null=True, blank=True, verbose_name="Weight (kgs)")
     
     class Meta:
         ordering = ["start_dt"]

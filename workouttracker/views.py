@@ -142,10 +142,13 @@ class StatisticsView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["exercises"] = Exercise.objects.all()
+        context["weight_data_points"] = [(w.start_dt.strftime("%m-%d-%Y %H:%M"), w.weight) for w in Workout.objects.filter(weight__isnull=False)]
         return context
 
 
 class StatisticsExerciseDataPointsView(generic.View):
     def get(self, request, *args, **kwargs):
-        data_points = {}
+        exercise = Exercise.objects.get(id=kwargs["pk"])
+        workout_exercises = WorkoutExercise.objects.filter(exercise=exercise)
+        data_points = {metric_field_name: [(workout_exercise.workout.start_dt.strftime("%m-%d-%Y %H:%M"), metric_value) for workout_exercise in workout_exercises if (metric_value := getattr(workout_exercise, metric_field_name)) is not None] for metric_field_name in exercise.get_enabled_metric_fields()}
         return JsonResponse(data_points)

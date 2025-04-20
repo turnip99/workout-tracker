@@ -12,20 +12,62 @@
             {% endfor %}
         </select>
     </div>
+    <div id="charts_div"></div>
+      
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    {{ weight_data_points|json_script:"weight_data_points" }}
     <script>
+        const weightDataPoints = JSON.parse(document.getElementById('weight_data_points').textContent);
+
+        function initialiseChart(title, dataPoints) {
+            canvasID = `canvas_${title}`
+            $("#charts_div").append(`<canvas id="${canvasID}"></canvas>`)
+            canvas = $(`#${canvasID}`)[0]
+            reformattedDataPoints = []
+            for (const i in dataPoints) {
+                reformattedDataPoints.push({x: new Date(dataPoints[i][0]), y: dataPoints[i][1]})
+            }
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                  datasets: [{
+                    label: title,
+                    fill: false,
+                    data: reformattedDataPoints,
+                  }]
+                },
+                options: {
+                  scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'month'
+                        },
+                        distribution: 'linear'
+                    }
+                  }
+                }
+            });
+        }
+
         $("#exercise_select").change(function() {
             exerciseSelect = $(this)
             const selectedExercise = exerciseSelect.val()
+            $("#charts_div").html("")
             if (selectedExercise == "weight") {
-                // TODO load weight in immediately
+                initialiseChart("Weight", weightDataPoints)
             }
             else {
                 exerciseSelect.prop("disabled", true)
-                $.get("{% url 'statistics_exercise_data_points' pk=0 %}".replace("0", selectedExercise), function(dataPoints) {
-                    console.log(dataPoints)
+                $.get("{% url 'statistics_exercise_data_points' pk=0 %}".replace("0", selectedExercise), function(dataPointsByMetric) {
+                    console.log(dataPointsByMetric)
+                    for (const [metric_field_name, dataPoints] of Object.entries(dataPointsByMetric)) {
+                        initialiseChart(metric_field_name, dataPoints)
+                    }
                     exerciseSelect.prop("disabled", false)
                 });
             }

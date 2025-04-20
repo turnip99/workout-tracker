@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('start_dt', models.DateTimeField()),
                 ('end_dt', models.DateTimeField(blank=True, null=True)),
-                ('weight', models.FloatField(blank=True, null=True, verbose_name='Weight kg)')),
+                ('weight', models.FloatField(blank=True, null=True, verbose_name='Weight (kgs)')),
             ],
             options={
                 'ordering': ['start_dt'],
