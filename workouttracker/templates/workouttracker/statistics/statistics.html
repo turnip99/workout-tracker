@@ -23,6 +23,10 @@
     <script>
         const weightDataPoints = JSON.parse(document.getElementById('weight_data_points').textContent);
 
+        const durationTooltip = (tooltipItems) => {
+            return `${tooltipItems[0].parsed.y} seconds`;
+        };
+
         function initialiseChart(title, dataPoints) {
             canvasID = `canvas_${title}`
             $("#charts_div").append(`<canvas id="${canvasID}"></canvas>`)
@@ -48,8 +52,15 @@
                             unit: 'month'
                         },
                         distribution: 'linear'
+                    },
+                  },
+                  plugins: title === "Duration" ? {
+                    tooltip: {
+                      callbacks: {
+                        footer: durationTooltip,
+                      }
                     }
-                  }
+                  } : {}
                 }
             });
         }

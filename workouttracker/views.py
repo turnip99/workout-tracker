@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
+from workouttracker.templatetags.workout_extras import capitalise_and_underscore_to_space
+
 from .forms import ExerciseForm, WorkoutEndForm, WorkoutExerciseForm
 from .models import Exercise, Workout, WorkoutExercise
 from .utils import get_default_metric_values_by_exercise, get_enabled_metric_fields_by_exercise
@@ -150,5 +152,5 @@ class StatisticsExerciseDataPointsView(generic.View):
     def get(self, request, *args, **kwargs):
         exercise = Exercise.objects.get(id=kwargs["pk"])
         workout_exercises = WorkoutExercise.objects.filter(exercise=exercise)
-        data_points = {metric_field_name: [(workout_exercise.workout.start_dt.strftime("%m-%d-%Y %H:%M"), metric_value) for workout_exercise in workout_exercises if (metric_value := getattr(workout_exercise, metric_field_name)) is not None] for metric_field_name in exercise.get_enabled_metric_fields()}
+        data_points = {capitalise_and_underscore_to_space(metric_field_name): [(workout_exercise.workout.start_dt.strftime("%m-%d-%Y %H:%M"), metric_value.seconds if metric_field_name == "duration" else metric_value) for workout_exercise in workout_exercises if (metric_value := getattr(workout_exercise, metric_field_name)) is not None] for metric_field_name in exercise.get_enabled_metric_fields()}
         return JsonResponse(data_points)
