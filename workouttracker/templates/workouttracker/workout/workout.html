@@ -2,7 +2,7 @@
 {% load workout_extras %}
 
 {% block main %}
-    <h5>Workout {% if object.is_complete %}from {{ object.start_dt|date:'d-m-Y H:i' }} to {{ object.end_dt|date:'d-m-Y H:i' }}{% else %}starting at {{ object.start_dt|date:'d-m-Y H:i' }}{% endif %}</h5>
+    <h4>Workout {% if object.is_complete %}from {{ object.start_dt|date:'d-m-Y H:i' }} to {{ object.end_dt|date:'d-m-Y H:i' }}{% else %}starting at {{ object.start_dt|date:'d-m-Y H:i' }}{% endif %}</h4>
     {% if not object.is_complete %}
         <a class="btn btn-secondary w-100 mb-2" href="{% url 'workout_add_exercise' workout_id=object.id %}">Add exercise</a>
     {% endif %}
@@ -27,7 +27,11 @@
             </div>
         {% endfor %}
     </div>
-    {% if not object.is_complete %}
+    {% if object.is_complete %}
+        {% if object.weight %}
+            <h5>Weight at end of workout: <span class="fw-bold">{{ object.weight }} kgs</span></h5>
+        {% endif %}
+    {% else %}
         <a class="btn btn-success w-100" href="{% url 'workout_end' pk=object.id %}">End workout</a>
     {% endif %}
 {% endblock %}
