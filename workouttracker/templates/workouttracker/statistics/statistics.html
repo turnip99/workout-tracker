@@ -64,7 +64,6 @@
             else {
                 exerciseSelect.prop("disabled", true)
                 $.get("{% url 'statistics_exercise_data_points' pk=0 %}".replace("0", selectedExercise), function(dataPointsByMetric) {
-                    console.log(dataPointsByMetric)
                     for (const [metric_field_name, dataPoints] of Object.entries(dataPointsByMetric)) {
                         initialiseChart(metric_field_name, dataPoints)
                     }
