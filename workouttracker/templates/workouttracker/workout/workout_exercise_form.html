@@ -15,18 +15,23 @@
     {% if not self.object %}
         {{ enabled_metric_fields_by_exercise|json_script:"enabled_metric_fields_by_exercise" }}
         {{ default_metric_values_by_exercise|json_script:"default_metric_values_by_exercise" }}
+        {{ notes_by_exercise|json_script:"notes_by_exercise" }}
         <script>
             const enabledMetricFieldsByExercise = JSON.parse(document.getElementById('enabled_metric_fields_by_exercise').textContent);
             const defaultMetricValuesByExercise = JSON.parse(document.getElementById('default_metric_values_by_exercise').textContent);
+            const notesByExercise = JSON.parse(document.getElementById('notes_by_exercise').textContent);
+            console.log(notesByExercise)
+            notesDiv = $("#div_notes")
             $("#id_exercise").change(function() {
                 let enabledMetricFields = []
                 let defaultMetricValues = {}
+                let notes = ""
                 const exerciseID = $(this).val()
                 if (exerciseID) {
                     enabledMetricFields = enabledMetricFieldsByExercise[exerciseID]
                     defaultMetricValues = defaultMetricValuesByExercise[exerciseID]
+                    notes = notesByExercise[exerciseID]
                 }
-                console.log(defaultMetricValues)
                 {% for metric_field in all_metric_fields %}
                     $("#id_{{ metric_field }}").val("")
                     if (enabledMetricFields.includes("{{ metric_field }}")) {
@@ -41,6 +46,7 @@
                         $("#id_{{ metric_field }}").prop("required", false)
                     }
                 {% endfor %}
+                notesDiv.html(notes).toggleClass("d-none", !notes.length)
             }).change();
         </script>
     {% endif %}

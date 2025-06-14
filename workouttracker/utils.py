@@ -21,3 +21,10 @@ def get_default_metric_values_by_exercise(enabled_metric_fields_by_exercise):
                 exercise_metric_values[metric_field] = metric_value
         default_metric_values[exercise_id] = exercise_metric_values
     return default_metric_values
+
+
+def get_notes_by_exercise():
+    notes = {}
+    for exercise in Exercise.objects.all():
+        notes[exercise.id] = exercise.notes
+    return notes

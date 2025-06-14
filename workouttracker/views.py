@@ -7,7 +7,7 @@ from workouttracker.templatetags.workout_extras import capitalise_and_underscore
 
 from .forms import ExerciseForm, WorkoutEndForm, WorkoutExerciseForm
 from .models import Exercise, Workout, WorkoutExercise
-from .utils import get_default_metric_values_by_exercise, get_enabled_metric_fields_by_exercise
+from .utils import get_default_metric_values_by_exercise, get_enabled_metric_fields_by_exercise, get_notes_by_exercise
 
 class IndexView(generic.TemplateView):
     template_name = "workouttracker/index.html"
@@ -44,6 +44,7 @@ class WorkoutAddExerciseView(generic.CreateView):
         self.workout_id = None
         self.enabled_metric_fields_by_exercise = get_enabled_metric_fields_by_exercise()
         self.default_metric_values_by_exercise = get_default_metric_values_by_exercise(self.enabled_metric_fields_by_exercise)
+        self.notes_by_exercise = get_notes_by_exercise()
 
     def dispatch(self, request, *args, **kwargs):
         self.workout_id = kwargs["workout_id"]
@@ -60,6 +61,7 @@ class WorkoutAddExerciseView(generic.CreateView):
         context["all_metric_fields"] = Exercise.get_all_metric_fields()
         context["enabled_metric_fields_by_exercise"] = self.enabled_metric_fields_by_exercise
         context["default_metric_values_by_exercise"] = self.default_metric_values_by_exercise
+        context["notes_by_exercise"] = self.notes_by_exercise
         return context
     
     def form_valid(self, form):
