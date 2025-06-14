@@ -55,7 +55,7 @@ class WorkoutExerciseForm(FormWithHelperMixin, forms.ModelForm):
                     self.fields.pop(field)
         layout = Layout(
             "exercise",
-            HTML(f"<div id='div_notes' class='fw-light fst-italic mb-3' style='white-space: pre-wrap'>{self.instance.exercise.notes if self.instance.pk and self.instance.exercise.notes else ""}</div>"),
+            HTML(f"""<div id='div_notes' class='fw-light fst-italic mb-3' style='white-space: pre-wrap'>{self.instance.exercise.notes if self.instance.pk and self.instance.exercise.notes else ""}</div>"""),
             *[Field(metric_field) if metric_field in self.fields else None for metric_field in all_metric_fields],
             HTML("<hr/>"),
             "sets",
