@@ -25,7 +25,8 @@
     <script>
         const weightDataPoints = JSON.parse(document.getElementById('weight_data_points').textContent);
         const lengthDataPoints = JSON.parse(document.getElementById('length_data_points').textContent);
-
+        Chart.defaults.color = "#cccccc";
+        
         const lengthTooltip = (tooltipItems) => {
             return `${tooltipItems[0].parsed.y} minutes`;
         };
@@ -49,6 +50,7 @@
                     label: title,
                     fill: false,
                     data: reformattedDataPoints,
+                    borderColor: '#c4f5ff',
                   }]
                 },
                 options: {
