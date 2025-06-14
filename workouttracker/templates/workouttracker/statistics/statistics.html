@@ -6,6 +6,7 @@
         <label>Exercise</label>
         <select class="form-control" id="exercise_select">
             <option value="weight">Weight</option>
+            <option value="length">Workout length</option>
             <hr/>
             {% for exercise in exercises %}
                 <option value="{{ exercise.id }}">{{ exercise.name }}</option>
@@ -20,8 +21,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     {{ weight_data_points|json_script:"weight_data_points" }}
+    {{ length_data_points|json_script:"length_data_points" }}
     <script>
         const weightDataPoints = JSON.parse(document.getElementById('weight_data_points').textContent);
+        const lengthDataPoints = JSON.parse(document.getElementById('length_data_points').textContent);
+
+        const lengthTooltip = (tooltipItems) => {
+            return `${tooltipItems[0].parsed.y} minutes`;
+        };
 
         const durationTooltip = (tooltipItems) => {
             return `${tooltipItems[0].parsed.y} seconds`;
@@ -54,11 +61,17 @@
                         distribution: 'linear'
                     },
                   },
-                  plugins: title === "Duration" ? {
+                  plugins: title === "Length" ? {
                     tooltip: {
                       callbacks: {
-                        footer: durationTooltip,
+                        footer: lengthTooltip,
                       }
+                    }
+                  } : title === "Duration" ? {
+                    tooltip: {
+                        callbacks: {
+                          footer: durationTooltip,
+                        }
                     }
                   } : {}
                 }
@@ -71,6 +84,9 @@
             $("#charts_div").html("")
             if (selectedExercise == "weight") {
                 initialiseChart("Weight", weightDataPoints)
+            }
+            else if (selectedExercise == "length") {
+                initialiseChart("Length", lengthDataPoints)
             }
             else {
                 exerciseSelect.prop("disabled", true)

@@ -1,3 +1,5 @@
+from math import floor
+
 from django.db import models
 from django.templatetags.static import static
 
@@ -65,6 +67,9 @@ class Workout(models.Model):
     
     def is_complete(self):
         return bool(self.end_dt)
+    
+    def get_length(self):
+        return floor((self.end_dt - self.start_dt).seconds / 60) if self.end_dt else 0
     
 
 class WorkoutExercise(models.Model):

@@ -147,6 +147,7 @@ class StatisticsView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context["exercises"] = Exercise.objects.all()
         context["weight_data_points"] = [(w.start_dt.strftime("%m-%d-%Y %H:%M"), w.weight) for w in Workout.objects.filter(weight__isnull=False)]
+        context["length_data_points"] = [(w.start_dt.strftime("%m-%d-%Y %H:%M"), w.get_length()) for w in Workout.objects.filter(end_dt__isnull=False)]
         return context
 
 
